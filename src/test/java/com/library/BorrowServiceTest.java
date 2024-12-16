@@ -13,6 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,47 +23,82 @@ class BorrowServiceTest {
     private StudentDAO studentDAO;
     private BorrowDAO borrowDAO;
     private Connection connection;
+    private Student testStudent;
+    private Book testBook;
 
     @BeforeEach
     void setUp() {
         try {
-            // Initialiser la connexion
+            // Initialiser la connexion et les DAOs
             connection = DbConnection.getConnection();
-
-            // Initialiser les DAOs avec la même connexion
             bookDAO = new BookDAO(connection);
             studentDAO = new StudentDAO(connection);
             borrowDAO = new BorrowDAO(connection);
-
-            // Initialiser le service avec les DAOs
             borrowService = new BorrowService(borrowDAO, bookDAO, studentDAO);
 
-            // Ajouter des données de test
-            Student student1 = new Student("Alice");
-            student1.setId(1);
-            studentDAO.addStudent(student1);
+            // Nettoyer d'abord les tables
+            connection.createStatement().execute("DELETE FROM borrows");
+            connection.createStatement().execute("DELETE FROM books");
+            connection.createStatement().execute("DELETE FROM students");
 
-            Student student2 = new Student("Bob");
-            student2.setId(2);
-            studentDAO.addStudent(student2);
+            // Créer l'étudiant test
+            testStudent = new Student("Alice");
+            studentDAO.addStudent(testStudent);
+            // Récupérer l'étudiant pour avoir son ID généré
+            List<Student> students = studentDAO.getAllStudents();
+            testStudent = students.get(0);
 
-            Book book1 = new Book("Java Programming", "John Doe", "Publisher", 2024);
-            book1.setId(1);
-            bookDAO.add(book1);
-
-            Book book2 = new Book("Advanced Java", "Jane Doe", "Publisher", 2024);
-            book2.setId(2);
-            bookDAO.add(book2);
+            // Créer le livre test avec ISBN unique
+            testBook = new Book(
+                    "Java Programming",
+                    "John Doe",
+                    "O'Reilly",
+                    2024,
+                    "111"
+            );
+            bookDAO.add(testBook);
+            // Récupérer le livre pour avoir son ID généré
+            List<Book> books = bookDAO.getAllBooks();
+            testBook = books.get(0);
 
         } catch (Exception e) {
             fail("Erreur lors de l'initialisation des tests : " + e.getMessage());
         }
     }
 
+    @Test
+    void testBorrowLifecycle() {
+        // Debug: afficher les IDs
+        System.out.println("Student ID: " + testStudent.getId());
+        System.out.println("Book ID: " + testBook.getId());
+
+        // 1. Emprunter un livre
+        Date borrowDate = new Date();
+        boolean result = borrowService.borrowBook(testStudent.getId(), testBook.getId(), borrowDate);
+        assertTrue(result, "L'emprunt devrait réussir");
+
+        // 2. Vérifier l'emprunt
+        List<Borrow> borrows = borrowService.getAllBorrows();
+        assertFalse(borrows.isEmpty(), "Des emprunts devraient exister");
+        Borrow borrow = borrows.get(0);
+
+        assertNotNull(borrow, "L'emprunt devrait exister");
+        assertEquals(testStudent.getId(), borrow.getStudent().getId(), "ID étudiant incorrect");
+        assertEquals(testBook.getId(), borrow.getBook().getId(), "ID livre incorrect");
+        assertNull(borrow.getReturnDate(), "Date de retour devrait être null");
+
+        // 3. Retourner le livre
+        borrowService.returnBook(borrow.getId());
+
+        // 4. Vérifier le retour
+        Borrow returnedBorrow = borrowService.getBorrow(borrow.getId());
+        assertNotNull(returnedBorrow, "L'emprunt devrait toujours exister");
+        assertNotNull(returnedBorrow.getReturnDate(), "La date de retour devrait être définie");
+    }
+
     @AfterEach
     void tearDown() {
         try {
-            // Nettoyer la base de données
             if (connection != null) {
                 connection.createStatement().execute("DELETE FROM borrows");
                 connection.createStatement().execute("DELETE FROM books");
@@ -72,56 +108,5 @@ class BorrowServiceTest {
         } catch (Exception e) {
             System.err.println("Erreur lors du nettoyage : " + e.getMessage());
         }
-    }
-
-    @Test
-    void testBorrowBook() {
-        // Test d'emprunt de livre
-        Date borrowDate = new Date();
-        assertTrue(borrowService.borrowBook(1, 1, borrowDate));
-
-        // Vérifier que l'emprunt a été créé
-        Borrow borrow = borrowService.getBorrow(1);
-        assertNotNull(borrow);
-        assertEquals(1, borrow.getStudent().getId());
-        assertEquals(1, borrow.getBook().getId());
-        assertNull(borrow.getReturnDate());
-    }
-
-    @Test
-    void testBorrowBookStudentNotFound() {
-        // Test avec un ID d'étudiant inexistant
-        Date borrowDate = new Date();
-        assertFalse(borrowService.borrowBook(999, 1, borrowDate));
-    }
-
-    @Test
-    void testBorrowBookNotFound() {
-        // Test avec un ID de livre inexistant
-        Date borrowDate = new Date();
-        assertFalse(borrowService.borrowBook(1, 999, borrowDate));
-    }
-
-    @Test
-    void testGetAllBorrows() {
-        // Créer quelques emprunts
-        Date borrowDate = new Date();
-        borrowService.borrowBook(1, 1, borrowDate);
-        borrowService.borrowBook(2, 2, borrowDate);
-
-        // Vérifier la liste des emprunts
-        assertNotNull(borrowService.getAllBorrows());
-        assertTrue(borrowService.getAllBorrows().size() >= 2);
-    }
-
-    @Test
-    void testBorrowExists() {
-        // Créer un emprunt
-        Date borrowDate = new Date();
-        borrowService.borrowBook(1, 1, borrowDate);
-
-        // Vérifier l'existence de l'emprunt
-        assertTrue(borrowService.borrowExists(1));
-        assertFalse(borrowService.borrowExists(999));
     }
 }

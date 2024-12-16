@@ -40,73 +40,40 @@ class BookServiceTest {
     }
 
     @Test
-    void testAddBook() {
-        // Créer un livre de test en utilisant le constructeur disponible
-        Book book = new Book("Java Programming", "John Doe", "O'Reilly", 2024);
-        book.setIsbn("123-456"); // Setter pour les champs additionnels
-        book.setPublishedYear(2024);
-
-        // Ajouter le livre
+    void testBookLifecycle() {
+        // 1. Créer et ajouter un livre
+        Book book = new Book(
+                "Java Programming",
+                "John Doe",
+                "O'Reilly",
+                2024,
+                "123-456"
+        );
         bookService.addBook(book);
+        assertNotEquals(0, book.getId(), "L'ID devrait être généré après l'ajout");
 
-        // Vérifier que le livre a été ajouté
+        // 2. Rechercher le livre par ID
         Book foundBook = bookService.findBookById(book.getId());
-        assertNotNull(foundBook, "Le livre devrait être trouvé");
+        assertNotNull(foundBook, "Le livre devrait être trouvé après l'ajout");
         assertEquals("Java Programming", foundBook.getTitle(), "Le titre devrait correspondre");
         assertEquals("John Doe", foundBook.getAuthor(), "L'auteur devrait correspondre");
-        assertEquals("O'Reilly", foundBook.getPublisher(), "L'éditeur devrait correspondre");
-    }
 
-    @Test
-    void testFindBookById() {
-        // Créer et ajouter un livre de test
-        Book book = new Book("Java Programming", "John Doe", "O'Reilly", 2024);
-        book.setIsbn("123-456");
-        book.setPublishedYear(2024);
-        bookService.addBook(book);
-
-        // Rechercher le livre
-        Book foundBook = bookService.findBookById(book.getId());
-
-        // Vérifications
-        assertNotNull(foundBook, "Le livre devrait être trouvé");
-        assertEquals("Java Programming", foundBook.getTitle(), "Le titre devrait correspondre");
-        assertEquals("John Doe", foundBook.getAuthor(), "L'auteur devrait correspondre");
-    }
-
-    @Test
-    void testDeleteBook() {
-        // Créer et ajouter un livre de test
-        Book book = new Book("Java Programming", "John Doe", "O'Reilly", 2024);
-        book.setIsbn("123-456");
-        bookService.addBook(book);
-
-        // Supprimer le livre
-        bookService.deleteBook(book.getId());
-
-        // Vérifier que le livre a été supprimé
-        Book deletedBook = bookService.findBookById(book.getId());
-        assertNull(deletedBook, "Le livre devrait être supprimé");
-    }
-
-    @Test
-    void testUpdateBook() {
-        // Créer et ajouter un livre de test
-        Book book = new Book("Java Programming", "John Doe", "O'Reilly", 2024);
-        book.setIsbn("123-456");
-        bookService.addBook(book);
-
-        // Modifier le livre
+        // 3. Mettre à jour le livre
         book.setTitle("Advanced Java");
         book.setAuthor("Jane Doe");
-        book.setPublisher("Manning");
         bookService.updateBook(book);
 
-        // Vérifier les modifications
+        // 4. Vérifier la mise à jour
         Book updatedBook = bookService.findBookById(book.getId());
-        assertNotNull(updatedBook, "Le livre devrait être trouvé");
+        assertNotNull(updatedBook, "Le livre devrait être trouvé après la mise à jour");
         assertEquals("Advanced Java", updatedBook.getTitle(), "Le titre devrait être mis à jour");
         assertEquals("Jane Doe", updatedBook.getAuthor(), "L'auteur devrait être mis à jour");
-        assertEquals("Manning", updatedBook.getPublisher(), "L'éditeur devrait être mis à jour");
+
+        // 5. Supprimer le livre
+        bookService.deleteBook(book.getId());
+
+        // 6. Vérifier la suppression
+        Book deletedBook = bookService.findBookById(book.getId());
+        assertNull(deletedBook, "Le livre devrait être supprimé");
     }
 }

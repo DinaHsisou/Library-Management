@@ -14,7 +14,15 @@ public class Book {
     // Constructeur par défaut
     public Book() {
     }
+    // Constructeur complet
 
+    public Book(String title, String author, String publisher, int publishedYear, String isbn) {
+        this.title = title;
+        this.author = author;
+        this.publisher = publisher;
+        this.publishedYear = publishedYear;
+        this.isbn = isbn;
+    }
     // Constructeur complet
     public Book(String title, String author, String publisher, int year) {
         this.title = title;

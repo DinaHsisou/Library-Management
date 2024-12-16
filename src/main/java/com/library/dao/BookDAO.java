@@ -14,18 +14,24 @@ public class BookDAO {
 
     // Ajouter un nouveau livre
     public void add(Book book) {
-        String sql = "INSERT INTO books (title, author, publisher, isbn, published_year) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        String sql = "INSERT INTO books (title, author, publisher, published_year, isbn) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, book.getTitle());
             statement.setString(2, book.getAuthor());
-            statement.setString(3, book.getPublisher());  // Ajout de cette ligne
-            statement.setString(4, book.getIsbn());
-            statement.setInt(5, book.getPublishedYear());
+            statement.setString(3, book.getPublisher());
+            statement.setInt(4, book.getPublishedYear());
+            statement.setString(5, book.getIsbn());
 
-            int rowsInserted = statement.executeUpdate();
-            if (rowsInserted > 0) {
-                System.out.println("Livre inséré avec succès !");
+            statement.executeUpdate();
+
+            // Récupérer l'ID généré
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    // Mettre à jour l'objet book avec l'ID généré
+                    book.setId(generatedKeys.getInt(1));
+                }
             }
+            System.out.println("Livre inséré avec succès !");
         } catch (SQLException e) {
             System.err.println("Erreur lors de l'ajout du livre : " + e.getMessage());
         }
