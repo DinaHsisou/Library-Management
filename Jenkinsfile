@@ -1,28 +1,34 @@
 pipeline {
     agent any
-    environment {
-        MAVEN_HOME = tool 'Maven'
+    tools {
+        maven 'maven3'
+        jdk 'JDK21'
+        jdk 'JDK17'  // Pour SonarQube
+
     }
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/votre-depot/GestionBibliotheque.git'
+
+               // Pas besoin de spécifier git car Jenkins le fait automatiquement
+               checkout scm
+
             }
         }
         stage('Build') {
             steps {
-                sh '${MAVEN_HOME}/bin/mvn clean compile'
+                bat 'mvn clean compile'
             }
         }
         stage('Test') {
             steps {
-                sh '${MAVEN_HOME}/bin/mvn test'
+                bat 'mvn test'
             }
         }
         stage('Quality Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh '${MAVEN_HOME}/bin/mvn sonar:sonar'
+                    bat 'mvn sonar:sonar'
                 }
             }
         }
@@ -34,12 +40,12 @@ pipeline {
     }
     post {
         success {
-            emailext to: 'votre-email@example.com',
+            emailext to: 'dinahsisou@gmail.com',
                 subject: 'Build Success',
                 body: 'Le build a été complété avec succès.'
         }
         failure {
-            emailext to: 'votre-email@example.com',
+            emailext to: 'dinahsisou@gmail.com',
                 subject: 'Build Failed',
                 body: 'Le build a échoué.'
         }
