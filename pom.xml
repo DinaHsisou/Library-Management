@@ -59,12 +59,7 @@
 
 
   <properties>
-      <sonar.projectKey>LibraryManagement</sonar.projectKey>
-      <sonar.projectName>Library Management</sonar.projectName>
-      <sonar.host.url>http://localhost:9000</sonar.host.url>
-      <sonar.java.source>17</sonar.java.source>
-      <sonar.coverage.jacoco.xmlReportPaths>${project.reporting.outputDirectory}/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-      <sonar.exclusions>**/target/**,**/test/**</sonar.exclusions>
+
 
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>

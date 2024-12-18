@@ -34,14 +34,16 @@ pipeline {
            steps {
                withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
                    withSonarQubeEnv('SonarQube') {
-                    bat """
-                    mvn clean verify sonar:sonar \
-                    -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                    -Dsonar.login=%SONAR_TOKEN% \
-                    -Dsonar.host.url=http://localhost:9000 \
-                    -Dsonar.java.source=17 \
-                    -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-                     """
+                       bat """
+                           mvn sonar:sonar \
+                           -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                           -Dsonar.login=%SONAR_TOKEN% \
+                           -Dsonar.host.url=http://localhost:9000 \
+                           -Dsonar.sources=src/main/java \
+                           -Dsonar.java.binaries=target/classes \
+                           -Dsonar.java.libraries=. \
+                           -Dsonar.sourceEncoding=UTF-8
+                       """
                    }
                }
            }
