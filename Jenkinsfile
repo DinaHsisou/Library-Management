@@ -36,11 +36,7 @@ pipeline {
                withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
 
                    withSonarQubeEnv('SonarQube') {
-                         bat """
-                         mvn sonar:sonar \
-                         -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                         -Dsonar.login=${SONAR_TOKEN}
-                         """
+                          bat "mvn sonar:sonar -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.login=%SONAR_TOKEN%"
                          }
                             }
                              }
