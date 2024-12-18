@@ -38,29 +38,25 @@ pipeline {
             }
         }
     }
-   post {
-               success {
+       post {
+           always {
+               script {
+                   // Configuration email plus simple
+                   def emailBody = """
+                       <h2>Build ${currentBuild.currentResult}</h2>
+                       <p>Job: ${env.JOB_NAME}</p>
+                       <p>Build Number: ${env.BUILD_NUMBER}</p>
+                       <p>Build URL: <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>
+                   """
+
                    emailext (
-                       subject: "✅ Build Réussi #${env.BUILD_NUMBER}",
-                       body: """Le build ${env.JOB_NAME} #${env.BUILD_NUMBER} a réussi!
-
-                           Voir les détails: ${env.BUILD_URL}
-
-                           Tests: ${currentBuild.tests}
-                           SonarQube: [URL SonarQube]
-                           """,
-                       to: "dinahsisou@email.com"
-                   )
-               }
-               failure {
-                   emailext (
-                       subject: "❌ Build Échoué #${env.BUILD_NUMBER}",
-                       body: """Le build ${env.JOB_NAME} #${env.BUILD_NUMBER} a échoué.
-
-                           Voir les logs: ${env.BUILD_URL}console
-                           """,
-                       to: "dinahsisou@email.com"
+                       to: 'dinahsisou@gmail.com',
+                       subject: "Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
+                       body: emailBody,
+                       mimeType: 'text/html',
+                       attachLog: true  // Attache les logs du build
                    )
                }
            }
+       }
 }
