@@ -60,9 +60,7 @@
 
   <properties>
 
-    <sonar.host.url>http://localhost:9000</sonar.host.url>
-    <sonar.projectKey>LibraryManagement</sonar.projectKey>
-    <sonar.login>sqp_0390998b7ddf7688e033549684b920705e9148f6</sonar.login>
+
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <maven.compiler.release>17</maven.compiler.release>
