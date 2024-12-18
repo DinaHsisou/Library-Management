@@ -38,28 +38,29 @@ pipeline {
             }
         }
     }
-    post {
-                success {
-                    emailext (
-                        subject: "✅ Build Réussi #${env.BUILD_NUMBER}",
-                        body: """Le build ${env.JOB_NAME} #${env.BUILD_NUMBER} a réussi!
+   post {
+               success {
+                   emailext (
+                       subject: "✅ Build Réussi #${env.BUILD_NUMBER}",
+                       body: """Le build ${env.JOB_NAME} #${env.BUILD_NUMBER} a réussi!
 
-                            Voir les détails: ${env.BUILD_URL}
+                           Voir les détails: ${env.BUILD_URL}
 
-                            Tests: ${currentBuild.tests}
-                            SonarQube: [URL SonarQube]
-                            """,
-                        to: "dinahsisou@email.com"
-                    )
-                }
-                failure {
-                    emailext (
-                        subject: "❌ Build Échoué #${env.BUILD_NUMBER}",
-                        body: """Le build ${env.JOB_NAME} #${env.BUILD_NUMBER} a échoué.
+                           Tests: ${currentBuild.tests}
+                           SonarQube: [URL SonarQube]
+                           """,
+                       to: "dinahsisou@email.com"
+                   )
+               }
+               failure {
+                   emailext (
+                       subject: "❌ Build Échoué #${env.BUILD_NUMBER}",
+                       body: """Le build ${env.JOB_NAME} #${env.BUILD_NUMBER} a échoué.
 
-                            Voir les logs: ${env.BUILD_URL}console
-                            """,
-                        to: "dinahsisou@email.com"
-                    )
-                }
-            }
+                           Voir les logs: ${env.BUILD_URL}console
+                           """,
+                       to: "dinahsisou@email.com"
+                   )
+               }
+           }
+}
