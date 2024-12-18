@@ -32,11 +32,11 @@ pipeline {
         }
        stage('Quality Analysis') {
            steps {
-               withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+               withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
                    withSonarQubeEnv('SonarQube') {
                        bat """
                            mvn sonar:sonar \
-                           -Dsonar.projectKey=LibraryManagement \
+                           -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
                            -Dsonar.login=%SONAR_TOKEN% \
                            -Dsonar.host.url=http://localhost:9000 \
                            -Dsonar.sources=src/main/java \
