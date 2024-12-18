@@ -30,21 +30,20 @@ pipeline {
                 bat 'mvn test'
             }
         }
-      stage('Quality Analysis') {
+       stage('Quality Analysis') {
 
+            steps {
+               withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
 
-                           steps {
-                                withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
-
-                                    withSonarQubeEnv('SonarQube') {
-                                            sh """
-                                            mvn sonar:sonar \
-                                           -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                                           -Dsonar.login=${SONAR_TOKEN}
-                                           """
-                                                       }
-                                               }
-                                       }
+                   withSonarQubeEnv('SonarQube') {
+                         bat """
+                         mvn sonar:sonar \
+                         -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                         -Dsonar.login=${SONAR_TOKEN}
+                         """
+                         }
+                            }
+                             }
                        }
         stage('Deploy') {
             steps {
