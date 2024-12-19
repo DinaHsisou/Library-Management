@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BorrowService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mon-projet</a> &gt; <a href="index.source.html" class="el_package">com.library.service</a> &gt; <span class="el_source">BorrowService.java</span></div><h1>BorrowService.java</h1><pre class="source lang-java linenums">
+package com.library.service;
+
+import com.library.dao.BookDAO;
+import com.library.dao.StudentDAO;
+import com.library.model.Book;
+import com.library.model.Student;
+import com.library.dao.BorrowDAO;
+import com.library.model.Borrow;
+import com.library.util.DbConnection;
+
+import java.sql.Connection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+public class BorrowService {
+
+    private BorrowDAO borrowDAO;
+    private BookDAO bookDAO;
+    private StudentDAO studentDAO;
+    private Connection connection;
+
+    // Constructeur par défaut
+<span class="nc" id="L25">    public BorrowService() {</span>
+        try {
+<span class="nc" id="L27">            this.connection = DbConnection.getConnection();</span>
+<span class="nc" id="L28">            this.studentDAO = new StudentDAO(this.connection);</span>
+<span class="nc" id="L29">            this.bookDAO = new BookDAO(this.connection);</span>
+<span class="nc" id="L30">            this.borrowDAO = new BorrowDAO(this.connection);</span>
+<span class="nc" id="L31">        } catch (Exception e) {</span>
+<span class="nc" id="L32">            System.err.println(&quot;Erreur lors de l'initialisation du service d'emprunts : &quot; + e.getMessage());</span>
+<span class="nc" id="L33">        }</span>
+<span class="nc" id="L34">    }</span>
+
+    // Constructeur avec injection des DAOs nécessaires
+<span class="fc" id="L37">    public BorrowService(BorrowDAO borrowDAO, BookDAO bookDAO, StudentDAO studentDAO) {</span>
+<span class="fc" id="L38">        this.borrowDAO = borrowDAO;</span>
+<span class="fc" id="L39">        this.bookDAO = bookDAO;</span>
+<span class="fc" id="L40">        this.studentDAO = studentDAO;</span>
+<span class="fc" id="L41">    }</span>
+
+    // Méthode pour emprunter un livre
+    // Emprunter un livre
+    public boolean borrowBook(int studentId, int bookId, Date borrowDate) {
+        // Vérifier que l'étudiant existe
+<span class="fc" id="L47">        Student student = studentDAO.getStudentById(studentId);</span>
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">        if (student == null) {</span>
+<span class="nc" id="L49">            System.out.println(&quot;Étudiant non trouvé&quot;);</span>
+<span class="nc" id="L50">            return false;</span>
+        }
+
+        // Vérifier que le livre existe
+<span class="fc" id="L54">        Book book = bookDAO.getBookById(bookId);</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (book == null) {</span>
+<span class="nc" id="L56">            System.out.println(&quot;Livre non trouvé&quot;);</span>
+<span class="nc" id="L57">            return false;</span>
+        }
+
+        // Créer et sauvegarder l'emprunt
+<span class="fc" id="L61">        Borrow borrow = new Borrow(0, student, book, borrowDate, null);</span>
+        try {
+<span class="fc" id="L63">            borrowDAO.save(borrow);</span>
+<span class="fc" id="L64">            System.out.println(&quot;Livre emprunté avec succès !&quot;);</span>
+<span class="fc" id="L65">            return true;</span>
+<span class="nc" id="L66">        } catch (Exception e) {</span>
+<span class="nc" id="L67">            System.err.println(&quot;Erreur lors de l'emprunt du livre : &quot; + e.getMessage());</span>
+<span class="nc" id="L68">            return false;</span>
+        }
+    }
+
+    // Obtenir un emprunt par son ID
+    public Borrow getBorrow(int borrowId) {
+<span class="fc" id="L74">        return borrowDAO.getBorrowById(borrowId);</span>
+    }
+
+
+
+    // Afficher les emprunts (méthode fictive, à adapter)
+    public void displayBorrows() {
+<span class="nc" id="L81">        List&lt;Borrow&gt; borrows = borrowDAO.getAllBorrows();</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (borrows.isEmpty()) {</span>
+<span class="nc" id="L83">            System.out.println(&quot;Aucun emprunt enregistré&quot;);</span>
+<span class="nc" id="L84">            return;</span>
+        }
+
+<span class="nc" id="L87">        System.out.println(&quot;\n=== Liste des emprunts ===&quot;);</span>
+<span class="nc" id="L88">        System.out.println(&quot;------------------------&quot;);</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        for (Borrow borrow : borrows) {</span>
+            // Formater la date d'emprunt
+<span class="nc" id="L91">            String borrowDate = new SimpleDateFormat(&quot;dd/MM/yyyy&quot;).format(borrow.getBorrowDate());</span>
+
+            // Gérer la date de retour
+<span class="nc" id="L94">            String returnDate = &quot;Non retourné&quot;;</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">            if (borrow.getReturnDate() != null) {</span>
+<span class="nc" id="L96">                returnDate = new SimpleDateFormat(&quot;dd/MM/yyyy&quot;).format(borrow.getReturnDate());</span>
+            }
+
+<span class="nc" id="L99">            System.out.printf(&quot;ID: %d | Étudiant: %s | Livre: %s | Emprunté le: %s | Retourné le: %s%n&quot;,</span>
+<span class="nc" id="L100">                    borrow.getId(),</span>
+<span class="nc" id="L101">                    borrow.getStudent().getName(),</span>
+<span class="nc" id="L102">                    borrow.getBook().getTitle(),</span>
+                    borrowDate,
+                    returnDate
+            );
+<span class="nc" id="L106">        }</span>
+<span class="nc" id="L107">        System.out.println(&quot;------------------------&quot;);</span>
+<span class="nc" id="L108">        System.out.println(&quot;Total: &quot; + borrows.size() + &quot; emprunt(s)\n&quot;);</span>
+<span class="nc" id="L109">    }</span>
+    // Obtenir la liste de tous les emprunts
+    public List&lt;Borrow&gt; getAllBorrows() {
+        try {
+<span class="fc" id="L113">            return borrowDAO.getAllBorrows();</span>
+<span class="nc" id="L114">        } catch (Exception e) {</span>
+<span class="nc" id="L115">            System.err.println(&quot;Erreur lors de la récupération des emprunts : &quot; + e.getMessage());</span>
+<span class="nc" id="L116">            return null;</span>
+        }
+    }
+
+    // Fermer la connexion
+    public void closeConnection() {
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (connection != null) {</span>
+            try {
+<span class="nc" id="L124">                connection.close();</span>
+<span class="nc" id="L125">            } catch (Exception e) {</span>
+<span class="nc" id="L126">                System.err.println(&quot;Erreur lors de la fermeture de la connexion : &quot; + e.getMessage());</span>
+<span class="nc" id="L127">            }</span>
+        }
+<span class="nc" id="L129">    }</span>
+
+    // Vérifier si un emprunt existe
+    public boolean borrowExists(int borrowId) {
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        return borrowDAO.getBorrowById(borrowId) != null;</span>
+    }
+
+    public void returnBook(int borrowId) {
+        try {
+<span class="fc" id="L138">            borrowDAO.returnBook(borrowId);</span>
+<span class="nc" id="L139">        } catch (Exception e) {</span>
+<span class="nc" id="L140">            System.err.println(&quot;Erreur lors du retour du livre : &quot; + e.getMessage());</span>
+<span class="fc" id="L141">        }</span>
+<span class="fc" id="L142">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
