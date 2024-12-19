@@ -14,9 +14,15 @@ pipeline {
                checkout scm
             }
         }
-        stage('Build and Test') {
+
+        stage('Build and Coverage') {
             steps {
                 bat 'mvn clean verify'
+            }
+            post {
+                success {
+                    bat 'dir target\\site\\jacoco /s'  // Pour vérifier que le rapport est bien généré
+                }
             }
         }
 
@@ -25,12 +31,10 @@ pipeline {
                 withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
                     withSonarQubeEnv('SonarQube') {
                         bat """
-                            mvn sonar:sonar ^
+                            mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar ^
                             -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
                             -Dsonar.login=%SONAR_TOKEN% ^
                             -Dsonar.java.coveragePlugin=jacoco ^
-                            -Dsonar.jacoco.reportPath=target/jacoco.exec ^
-                            -Dsonar.junit.reportPaths=target/surefire-reports ^
                             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                         """
                     }
