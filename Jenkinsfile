@@ -31,17 +31,14 @@ pipeline {
             }
         }
          stage('Quality Analysis') {
-
-
-                            steps {
-                                                withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
-
-                                                        withSonarQubeEnv('SonarQube') {
-                                                               mvn sonar:sonar -Dsonar.projectKey=%SONAR_PROJECT_KEY% -Dsonar.login=%SONAR_TOKEN%
-                                                        }
-                                                }
-                                        }
-                        }
+             steps {
+                 withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
+                     withSonarQubeEnv('SonarQube') {
+                         bat "mvn sonar:sonar -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.login=${SONAR_TOKEN}"
+                     }
+                 }
+             }
+         }
         stage('Deploy') {
             steps {
                 echo 'Déploiement simulé réussi'
