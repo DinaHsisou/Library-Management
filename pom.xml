@@ -47,7 +47,9 @@
     </executions>
 </plugin>
 
-    
+
+
+
     </plugins>
 
 
@@ -59,8 +61,7 @@
 
 
   <properties>
-
-
+    <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <maven.compiler.release>17</maven.compiler.release>
@@ -74,6 +75,7 @@
       <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
+
       <dependency>
           <groupId>org.junit.jupiter</groupId>
           <artifactId>junit-jupiter</artifactId>
@@ -85,6 +87,12 @@
           <groupId>mysql</groupId>
           <artifactId>mysql-connector-java</artifactId>
           <version>8.0.33</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.sonarsource.scanner.maven/sonar-maven-plugin -->
+      <dependency>
+          <groupId>org.sonarsource.scanner.maven</groupId>
+          <artifactId>sonar-maven-plugin</artifactId>
+          <version>3.8.0.2131</version>
       </dependency>
 
   </dependencies>

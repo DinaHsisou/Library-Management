@@ -34,7 +34,7 @@ pipeline {
               script {
                   withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
                       withSonarQubeEnv('SonarQube') {
-                          bat "mvn clean verify sonar:sonar -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.token=${SONAR_TOKEN} -Dsonar.sources=src/main/java -Dsonar.tests=src/test/java"
+                            bat "mvn clean verify sonar:sonar -Dsonar.projectKey=LibraryManagement -Dsonar.token=$SONAR_TOKEN"
                       }
                   }
               }
