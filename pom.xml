@@ -39,7 +39,7 @@
         </execution>
         <execution>
             <id>report</id>
-            <phase>prepare-package</phase>
+            <phase>verify</phase>
             <goals>
                 <goal>report</goal>
             </goals>
@@ -65,6 +65,9 @@
 
 
   <properties>
+      <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+      <sonar.jacoco.reportPath>${project.build.directory}/jacoco.exec</sonar.jacoco.reportPath>
+      <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
       <sonar.host.url>http://localhost:9000</sonar.host.url>
       <sonar.projectKey>LibraryManagement</sonar.projectKey>
       <sonar.login>sqp_0390998b7ddf7688e033549684b920705e9148f6</sonar.login>
