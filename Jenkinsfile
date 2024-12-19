@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
        SONAR_PROJECT_KEY = 'LibraryManagement'
-       SONAR_SCANNER_HOME = tool 'SonarQubeScanner'
     }
     tools {
         maven 'maven3'
@@ -17,12 +16,10 @@ pipeline {
 
         stage('Build and Test') {
             steps {
-                bat 'mvn clean verify'
-            }
-            post {
-                success {
-                    bat 'mvn jacoco:report'
-                }
+                bat """
+                    mvn clean package
+                    mvn jacoco:prepare-agent jacoco:report
+                """
             }
         }
 
@@ -31,11 +28,10 @@ pipeline {
                 withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
                     withSonarQubeEnv('SonarQube') {
                         bat """
-                            mvn -X sonar:sonar ^
+                            mvn sonar:sonar ^
                             -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
                             -Dsonar.login=%SONAR_TOKEN% ^
-                            -Dsonar.jacoco.reportPath=target/jacoco.exec ^
-                            -Dsonar.jacoco.xmlReportPath=target/site/jacoco/jacoco.xml
+                            -X
                         """
                     }
                 }

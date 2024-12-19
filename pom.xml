@@ -32,17 +32,22 @@
                 <version>0.8.10</version>
                 <executions>
                     <execution>
-                        <id>prepare-agent</id>
+                        <id>default-prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>report</id>
-                        <phase>verify</phase>
+                        <id>default-report</id>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <formats>
+                                <format>XML</format>
+                            </formats>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -51,6 +56,10 @@
 
     <properties>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.java.source>17</sonar.java.source>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.tests>src/test/java</sonar.tests>
+        <sonar.sources>src/main/java</sonar.sources>
         <sonar.login>sqp_0390998b7ddf7688e033549684b920705e9148f6</sonar.login>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
