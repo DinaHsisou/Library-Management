@@ -30,24 +30,18 @@ pipeline {
                 bat 'mvn test'
             }
         }
-       stage('Quality Analysis') {
-           steps {
-               withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
-                   withSonarQubeEnv('SonarQube') {
-                       bat """
-                           mvn sonar:sonar \
-                           -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                           -Dsonar.login=%SONAR_TOKEN% \
-                           -Dsonar.host.url=http://localhost:9000 \
-                           -Dsonar.sources=src/main/java \
-                           -Dsonar.java.binaries=target/classes \
-                           -Dsonar.java.libraries=. \
-                           -Dsonar.sourceEncoding=UTF-8
-                       """
-                   }
-               }
-           }
-       }
+         stage('Quality Analysis') {
+
+
+                            steps {
+                                                withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
+
+                                                        withSonarQubeEnv('SonarQube') {
+                                                               mvn sonar:sonar -Dsonar.projectKey=%SONAR_PROJECT_KEY% -Dsonar.login=%SONAR_TOKEN%
+                                                        }
+                                                }
+                                        }
+                        }
         stage('Deploy') {
             steps {
                 echo 'Déploiement simulé réussi'

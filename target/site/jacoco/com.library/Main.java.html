@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mon-projet</a> &gt; <a href="index.source.html" class="el_package">com.library</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package com.library;
+
+import com.library.service.BorrowService;
+import com.library.service.BookService;
+import com.library.service.StudentService;
+import com.library.model.Book;
+import com.library.model.Student;
+import com.library.model.Borrow;
+import com.library.util.DbConnection;
+import java.util.Date;
+import java.util.Scanner;
+import java.sql.Connection;
+
+<span class="nc" id="L14">public class Main {</span>
+    public static void main(String[] args) {
+<span class="nc" id="L16">        Scanner scanner = new Scanner(System.in);</span>
+
+        // Création des services
+<span class="nc" id="L19">        BookService bookService = new BookService();</span>
+<span class="nc" id="L20">        StudentService studentService = new StudentService();</span>
+<span class="nc" id="L21">        BorrowService borrowService = new BorrowService();</span>
+
+<span class="nc" id="L23">        boolean running = true;</span>
+
+<span class="nc bnc" id="L25" title="All 2 branches missed.">        while (running) {</span>
+<span class="nc" id="L26">            System.out.println(&quot;\n===== Menu =====&quot;);</span>
+<span class="nc" id="L27">            System.out.println(&quot;1. Ajouter un livre&quot;);</span>
+<span class="nc" id="L28">            System.out.println(&quot;2. Afficher les livres&quot;);</span>
+<span class="nc" id="L29">            System.out.println(&quot;3. Ajouter un étudiant&quot;);</span>
+<span class="nc" id="L30">            System.out.println(&quot;4. Afficher les étudiants&quot;);</span>
+<span class="nc" id="L31">            System.out.println(&quot;5. Emprunter un livre&quot;);</span>
+<span class="nc" id="L32">            System.out.println(&quot;6. Retourner un livre&quot;);</span>
+<span class="nc" id="L33">            System.out.println(&quot;7. Afficher les emprunts&quot;);</span>
+<span class="nc" id="L34">            System.out.println(&quot;8. Quitter&quot;);</span>
+
+<span class="nc" id="L36">            System.out.print(&quot;Choisir une option: &quot;);</span>
+<span class="nc" id="L37">            int choice = scanner.nextInt();</span>
+<span class="nc" id="L38">            scanner.nextLine();  // Consommer la ligne restante après l'entier</span>
+
+            try {
+<span class="nc bnc" id="L41" title="All 9 branches missed.">                switch (choice) {</span>
+                    case 1:
+<span class="nc" id="L43">                        System.out.print(&quot;Entrez le titre du livre: &quot;);</span>
+<span class="nc" id="L44">                        String title = scanner.nextLine();</span>
+<span class="nc" id="L45">                        System.out.print(&quot;Entrez l'auteur du livre: &quot;);</span>
+<span class="nc" id="L46">                        String author = scanner.nextLine();</span>
+<span class="nc" id="L47">                        System.out.print(&quot;Entrez l'éditeur du livre: &quot;);</span>
+<span class="nc" id="L48">                        String publisher = scanner.nextLine();</span>
+<span class="nc" id="L49">                        System.out.print(&quot;Entrez l'année de publication: &quot;);</span>
+<span class="nc" id="L50">                        int year = scanner.nextInt();</span>
+<span class="nc" id="L51">                        scanner.nextLine();</span>
+<span class="nc" id="L52">                        System.out.print(&quot;Entrez l'ISBN du livre: &quot;);</span>
+<span class="nc" id="L53">                        String isbn = scanner.nextLine();</span>
+
+<span class="nc" id="L55">                        Book newBook = new Book(title, author, publisher, year);</span>
+<span class="nc" id="L56">                        newBook.setIsbn(isbn);</span>
+<span class="nc" id="L57">                        newBook.setPublishedYear(year);</span>
+<span class="nc" id="L58">                        bookService.addBook(newBook);</span>
+<span class="nc" id="L59">                        break;</span>
+
+                    case 2:
+<span class="nc" id="L62">                        bookService.displayBooks();</span>
+<span class="nc" id="L63">                        break;</span>
+
+                    case 3:
+<span class="nc" id="L66">                        System.out.print(&quot;Entrez le nom de l'étudiant: &quot;);</span>
+<span class="nc" id="L67">                        String studentName = scanner.nextLine();</span>
+<span class="nc" id="L68">                        Student newStudent = new Student(studentName);</span>
+<span class="nc" id="L69">                        studentService.addStudent(newStudent);</span>
+<span class="nc" id="L70">                        break;</span>
+
+                    case 4:
+<span class="nc" id="L73">                        studentService.displayStudents();</span>
+<span class="nc" id="L74">                        break;</span>
+
+                    case 5:
+<span class="nc" id="L77">                        System.out.print(&quot;Entrez l'ID de l'étudiant: &quot;);</span>
+<span class="nc" id="L78">                        int studentId = scanner.nextInt();</span>
+<span class="nc" id="L79">                        System.out.print(&quot;Entrez l'ID du livre: &quot;);</span>
+<span class="nc" id="L80">                        int bookId = scanner.nextInt();</span>
+
+                        // Créer l'emprunt
+<span class="nc" id="L83">                        borrowService.borrowBook(studentId, bookId, new Date());</span>
+<span class="nc" id="L84">                        break;</span>
+
+                    case 6:
+<span class="nc" id="L87">                        System.out.print(&quot;Entrez l'ID de l'emprunt à retourner : &quot;);</span>
+<span class="nc" id="L88">                        int borrowId = scanner.nextInt();</span>
+<span class="nc" id="L89">                        borrowService.returnBook(borrowId);</span>
+<span class="nc" id="L90">                        break;</span>
+
+
+                    case 7:
+<span class="nc" id="L94">                        borrowService.displayBorrows();</span>
+<span class="nc" id="L95">                        break;</span>
+
+
+                    case 8:
+<span class="nc" id="L99">                        running = false;</span>
+<span class="nc" id="L100">                        System.out.println(&quot;Au revoir!&quot;);</span>
+                        // Fermer les connexions avant de quitter
+<span class="nc" id="L102">                        bookService.closeConnection();</span>
+<span class="nc" id="L103">                        studentService.closeConnection();</span>
+<span class="nc" id="L104">                        borrowService.closeConnection();</span>
+<span class="nc" id="L105">                        break;</span>
+
+                    default:
+<span class="nc" id="L108">                        System.out.println(&quot;Option invalide.&quot;);</span>
+                }
+<span class="nc" id="L110">            } catch (Exception e) {</span>
+<span class="nc" id="L111">                System.err.println(&quot;Une erreur est survenue : &quot; + e.getMessage());</span>
+<span class="nc" id="L112">            }</span>
+<span class="nc" id="L113">        }</span>
+
+<span class="nc" id="L115">        scanner.close();</span>
+<span class="nc" id="L116">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
