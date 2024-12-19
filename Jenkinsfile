@@ -3,6 +3,7 @@ pipeline {
     environment {
        SONAR_PROJECT_KEY = 'LibraryManagement'
        SONAR_SCANNER_HOME = tool 'SonarQubeScanner'
+
     }
     tools {
         maven 'maven3'
@@ -11,36 +12,38 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+
                checkout scm
+
+            }
+        }
+        stage('Build') {
+            steps {
+                bat 'mvn clean compile'
+            }
+        }
+        stage('Test') {
+            steps {
+                bat 'mvn test'
             }
         }
 
-        stage('Build and Coverage') {
-            steps {
-                bat 'mvn clean verify'
-            }
-            post {
-                success {
-                    bat 'dir target\\site\\jacoco /s'  // Pour vérifier que le rapport est bien généré
-                }
-            }
-        }
+         stage('Quality Analysis') {
 
-        stage('Quality Analysis') {
-            steps {
-                withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
-                    withSonarQubeEnv('SonarQube') {
-                        bat """
-                            mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar ^
-                            -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
-                            -Dsonar.login=%SONAR_TOKEN% ^
-                            -Dsonar.java.coveragePlugin=jacoco ^
-                            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-                        """
-                    }
-                }
-            }
-        }
+
+                     steps {
+                                         withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
+
+                                                 withSonarQubeEnv('SonarQube') {
+                                                              bat """
+                                                              mvn sonar:sonar ^
+                                                              -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
+                                                              -Dsonar.login=%SONAR_TOKEN%
+                                                          """
+                                                 }
+                                         }
+                                 }
+                 }
 
         stage('Deploy') {
             steps {
@@ -48,24 +51,25 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            script {
-                def emailBody = """
-                    <h2>Build ${currentBuild.currentResult}</h2>
-                    <p>Job: ${env.JOB_NAME}</p>
-                    <p>Build Number: ${env.BUILD_NUMBER}</p>
-                    <p>Build URL: <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>
-                """
+     post {
+               always {
+                   script {
+                       // Configuration email plus simple
+                       def emailBody = """
+                           <h2>Build ${currentBuild.currentResult}</h2>
+                           <p>Job: ${env.JOB_NAME}</p>
+                           <p>Build Number: ${env.BUILD_NUMBER}</p>
+                           <p>Build URL: <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>
+                       """
 
-                emailext (
-                    to: 'dinahsisou@gmail.com',
-                    subject: "Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
-                    body: emailBody,
-                    mimeType: 'text/html',
-                    attachLog: true
-                )
-            }
-        }
-    }
+                       emailext (
+                           to: 'dinahsisou@gmail.com',
+                           subject: "Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
+                           body: emailBody,
+                           mimeType: 'text/html',
+                           attachLog: true  // Attache les logs du build
+                       )
+                   }
+               }
+           }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.library.StudentServiceTest" time="0.284" tests="5" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.library.StudentServiceTest" time="0.322" tests="5" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Users\PC\.jdks\openjdk-21.0.2\bin"/>
-    <property name="sun.java.command" value="C:\Users\PC\AppData\Local\Temp\surefire990749802325709450\surefirebooter-20241219232640224_3.jar C:\Users\PC\AppData\Local\Temp\surefire990749802325709450 2024-12-19T23-26-38_647-jvmRun1 surefire-20241219232640224_1tmp surefire_0-20241219232640224_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\PC\AppData\Local\Temp\surefire10707604620742321946\surefirebooter-20241220000250518_3.jar C:\Users\PC\AppData\Local\Temp\surefire10707604620742321946 2024-12-20T00-02-49_969-jvmRun1 surefire-20241220000250518_1tmp surefire_0-20241220000250518_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\PC\Desktop\pfsQL\GestionBibliotheque\GestionBibliotheque\target\test-classes;C:\Users\PC\Desktop\pfsQL\GestionBibliotheque\GestionBibliotheque\target\classes;C:\Users\PC\.m2\repository\junit\junit\4.13.2\junit-4.13.2.jar;C:\Users\PC\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\PC\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\PC\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;C:\Users\PC\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.0\junit-jupiter-5.10.0.jar;C:\Users\PC\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.0\junit-jupiter-api-5.10.0.jar;C:\Users\PC\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\PC\.m2\repository\org\junit\platform\junit-platform-commons\1.10.0\junit-platform-commons-1.10.0.jar;C:\Users\PC\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\PC\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.0\junit-jupiter-params-5.10.0.jar;C:\Users\PC\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.0\junit-jupiter-engine-5.10.0.jar;C:\Users\PC\.m2\repository\org\junit\platform\junit-platform-engine\1.10.0\junit-platform-engine-1.10.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\PC\AppData\Local\Temp\surefire990749802325709450\surefirebooter-20241219232640224_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\PC\AppData\Local\Temp\surefire10707604620742321946\surefirebooter-20241220000250518_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.2+13-58"/>
@@ -59,19 +59,19 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testFindStudentById" classname="com.library.StudentServiceTest" time="0.063"/>
-  <testcase name="testAddStudent" classname="com.library.StudentServiceTest" time="0.044"/>
-  <testcase name="testCloseConnection" classname="com.library.StudentServiceTest" time="0.043"/>
-  <testcase name="testDisplayStudents" classname="com.library.StudentServiceTest" time="0.059">
+  <testcase name="testFindStudentById" classname="com.library.StudentServiceTest" time="0.083"/>
+  <testcase name="testAddStudent" classname="com.library.StudentServiceTest" time="0.047"/>
+  <testcase name="testCloseConnection" classname="com.library.StudentServiceTest" time="0.044"/>
+  <testcase name="testDisplayStudents" classname="com.library.StudentServiceTest" time="0.061">
     <system-out><![CDATA[Liste des étudiants :
 ID: 1 | Nom: Alice
 ID: 2 | Nom: Bob
 ]]></system-out>
   </testcase>
-  <testcase name="testFindNonExistentStudent" classname="com.library.StudentServiceTest" time="0.063">
+  <testcase name="testFindNonExistentStudent" classname="com.library.StudentServiceTest" time="0.066">
     <system-out><![CDATA[Aucun étudiant trouvé avec l'ID : 999
 ]]></system-out>
-    <system-err><![CDATA[Dec 19, 2024 11:26:44 PM com.library.dao.StudentDAO getStudentById
+    <system-err><![CDATA[Dec 20, 2024 12:03:00 AM com.library.dao.StudentDAO getStudentById
 WARNING: Aucun étudiant trouvé avec l'ID : 999
 ]]></system-err>
   </testcase>
