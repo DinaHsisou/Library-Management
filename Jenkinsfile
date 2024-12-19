@@ -14,14 +14,9 @@ pipeline {
                checkout scm
             }
         }
-        stage('Build') {
+        stage('Build and Test') {
             steps {
-                bat 'mvn clean compile'
-            }
-        }
-        stage('Test with Coverage') {
-            steps {
-                bat 'mvn test jacoco:report'
+                bat 'mvn clean verify'
             }
         }
 
@@ -34,6 +29,8 @@ pipeline {
                             -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
                             -Dsonar.login=%SONAR_TOKEN% ^
                             -Dsonar.java.coveragePlugin=jacoco ^
+                            -Dsonar.jacoco.reportPath=target/jacoco.exec ^
+                            -Dsonar.junit.reportPaths=target/surefire-reports ^
                             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                         """
                     }
