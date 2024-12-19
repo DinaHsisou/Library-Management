@@ -7,7 +7,6 @@ pipeline {
         }
     tools {
         maven 'maven3'
-        jdk 'JDK21'
         jdk 'JDK17'  // Pour SonarQube
 
     }
@@ -30,15 +29,17 @@ pipeline {
                 bat 'mvn test'
             }
         }
-         stage('Quality Analysis') {
-             steps {
-                 withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
-                     withSonarQubeEnv('SonarQube') {
-                         bat "mvn sonar:sonar -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.login=${SONAR_TOKEN}"
-                     }
-                 }
-             }
-         }
+      stage('Quality Analysis') {
+          steps {
+              script {
+                  withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
+                      withSonarQubeEnv('SonarQube') {
+                          bat "mvn clean verify sonar:sonar -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.token=${SONAR_TOKEN} -Dsonar.sources=src/main/java -Dsonar.tests=src/test/java"
+                      }
+                  }
+              }
+          }
+      }
         stage('Deploy') {
             steps {
                 echo 'Déploiement simulé réussi'
