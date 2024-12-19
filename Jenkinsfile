@@ -3,7 +3,6 @@ pipeline {
     environment {
        SONAR_PROJECT_KEY = 'LibraryManagement'
        SONAR_SCANNER_HOME = tool 'SonarQubeScanner'
-
     }
     tools {
         maven 'maven3'
@@ -12,38 +11,36 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-
                checkout scm
-
             }
         }
-        stage('Build') {
+
+        stage('Build and Test') {
             steps {
-                bat 'mvn clean compile'
+                bat 'mvn clean verify'
+            }
+            post {
+                success {
+                    bat 'mvn jacoco:report'
+                }
             }
         }
-        stage('Test') {
+
+        stage('Quality Analysis') {
             steps {
-                bat 'mvn test'
+                withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
+                    withSonarQubeEnv('SonarQube') {
+                        bat """
+                            mvn -X sonar:sonar ^
+                            -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
+                            -Dsonar.login=%SONAR_TOKEN% ^
+                            -Dsonar.jacoco.reportPath=target/jacoco.exec ^
+                            -Dsonar.jacoco.xmlReportPath=target/site/jacoco/jacoco.xml
+                        """
+                    }
+                }
             }
         }
-
-         stage('Quality Analysis') {
-
-
-                     steps {
-                                         withCredentials([string(credentialsId: 'sonarqube-project-token', variable: 'SONAR_TOKEN')]) {
-
-                                                 withSonarQubeEnv('SonarQube') {
-                                                              bat """
-                                                              mvn sonar:sonar ^
-                                                              -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
-                                                              -Dsonar.login=%SONAR_TOKEN%
-                                                          """
-                                                 }
-                                         }
-                                 }
-                 }
 
         stage('Deploy') {
             steps {
@@ -51,25 +48,24 @@ pipeline {
             }
         }
     }
-     post {
-               always {
-                   script {
-                       // Configuration email plus simple
-                       def emailBody = """
-                           <h2>Build ${currentBuild.currentResult}</h2>
-                           <p>Job: ${env.JOB_NAME}</p>
-                           <p>Build Number: ${env.BUILD_NUMBER}</p>
-                           <p>Build URL: <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>
-                       """
+    post {
+        always {
+            script {
+                def emailBody = """
+                    <h2>Build ${currentBuild.currentResult}</h2>
+                    <p>Job: ${env.JOB_NAME}</p>
+                    <p>Build Number: ${env.BUILD_NUMBER}</p>
+                    <p>Build URL: <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>
+                """
 
-                       emailext (
-                           to: 'dinahsisou@gmail.com',
-                           subject: "Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
-                           body: emailBody,
-                           mimeType: 'text/html',
-                           attachLog: true  // Attache les logs du build
-                       )
-                   }
-               }
-           }
+                emailext (
+                    to: 'dinahsisou@gmail.com',
+                    subject: "Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
+                    body: emailBody,
+                    mimeType: 'text/html',
+                    attachLog: true
+                )
+            }
+        }
+    }
 }
