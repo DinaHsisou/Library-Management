@@ -65,7 +65,7 @@
 
     <properties>
         <sonar.host.url>http://localhost:9100</sonar.host.url>
-        <sonar.login>squ_129674b83b43067b732d0f96521054cd9adc2754</sonar.login>
+        <sonar.login>squ_ba3d8f64e6e77d8afbd697f715aacd767fae4ddf</sonar.login>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <java.version>17</java.version>
