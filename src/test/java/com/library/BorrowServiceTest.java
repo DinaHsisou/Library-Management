@@ -35,7 +35,6 @@ class BorrowServiceTest {
             borrowDAO = new BorrowDAO(connection);
             borrowService = new BorrowService(borrowDAO, bookDAO, studentDAO);
 
-            // Nettoyer d'abord les tables
             connection.createStatement().execute("DELETE FROM borrows");
             connection.createStatement().execute("DELETE FROM books");
             connection.createStatement().execute("DELETE FROM students");
