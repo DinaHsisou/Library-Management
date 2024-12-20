@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    triggers {
+            githubPush()
+
+        }
     environment {
        SONAR_PROJECT_KEY = 'LibraryManagement'
        SONAR_SCANNER_HOME = tool 'SonarQubeScanner'
