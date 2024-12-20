@@ -2,6 +2,7 @@ pipeline {
     agent any
     triggers {
             githubPush()
+            pollSCM('* * * * *')
         }
     environment {
        SONAR_PROJECT_KEY = 'LibraryManagement'
