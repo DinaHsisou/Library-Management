@@ -17,10 +17,7 @@ pipeline {
 
         stage('Build and Test') {
             steps {
-                bat '''
-                    mvn clean verify -DskipTests=false
-                    mvn dependency:copy-dependencies
-                '''
+                bat 'mvn clean verify'
             }
         }
 
@@ -36,14 +33,12 @@ pipeline {
                             -Dsonar.tests=src/test/java ^
                             -Dsonar.java.binaries=target/classes ^
                             -Dsonar.java.test.binaries=target/test-classes ^
-                            -Dsonar.java.libraries=target/dependency/* ^
                             -Dsonar.sourceEncoding=UTF-8 ^
                             -Dsonar.host.url=http://localhost:9000 ^
                             -Dsonar.token=%SONAR_TOKEN% ^
                             -Dsonar.scm.disabled=true ^
                             -Dsonar.java.source=17 ^
-                            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
-                            -Dsonar.exclusions=**/target/**/*
+                            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                         '''
                     }
                 }
