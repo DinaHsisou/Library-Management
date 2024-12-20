@@ -27,18 +27,13 @@ Un système de gestion de bibliothèque développé en Java, permettant de gére
 
 ## Installation
 
-1. Cloner le repository
-```bash
-git clone https://github.com/DinaHsisou/Library-Management.git
-```
-
-2. Configurer la base de données MySQL
+1. Configurer la base de données MySQL
 ```sql
 CREATE DATABASE library_db;
 USE library_db;
 ```
 
-3. Compiler le projet
+2. Compiler le projet
 ```bash
 mvn clean install
 ```
