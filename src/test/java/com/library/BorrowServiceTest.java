@@ -29,7 +29,6 @@ class BorrowServiceTest {
     @BeforeEach
     void setUp() {
         try {
-            // Initialiser la connexion et les DAOs
             connection = DbConnection.getConnection();
             bookDAO = new BookDAO(connection);
             studentDAO = new StudentDAO(connection);
