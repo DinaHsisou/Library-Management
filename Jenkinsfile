@@ -34,7 +34,6 @@ pipeline {
                             mvn clean verify sonar:sonar ^
                             -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
                             -Dsonar.login=%SONAR_TOKEN% ^
-                            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
                         """
                     }
