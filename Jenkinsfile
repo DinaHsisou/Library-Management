@@ -31,12 +31,10 @@ pipeline {
                     withSonarQubeEnv('SonarQube') {
                         bat """
                             ${SONAR_SCANNER_HOME}\\bin\\sonar-scanner.bat ^
-                            -D"sonar.projectKey=LibraryManagement" ^
-                            -D"sonar.sources=." ^
-                            -D"sonar.host.url=http://localhost:9000" ^
-                            -D"sonar.token=%SONAR_TOKEN%" ^
-                            -D"sonar.java.binaries=**/*.java" ^
-                            -D"sonar.java.source=17"
+                            -Dsonar.projectKey=LibraryManagement ^
+                              -Dsonar.projectName='LibraryManagement' ^
+                              -Dsonar.host.url=http://localhost:9000 ^
+                              -Dsonar.token=squ_129674b83b43067b732d0f96521054cd9adc2754
                         """
                     }
                 }
