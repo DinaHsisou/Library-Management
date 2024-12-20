@@ -51,6 +51,15 @@
 
     <properties>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.sources>src/main/java</sonar.sources>
+        <sonar.tests>src/test/java</sonar.tests>
+        <sonar.java.binaries>target/classes</sonar.java.binaries>
+        <sonar.java.test.binaries>target/test-classes</sonar.java.test.binaries>
+        <sonar.java.source>17</sonar.java.source>
+        <sonar.scm.disabled>true</sonar.scm.disabled>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.projectVersion>${project.version}</sonar.projectVersion>
         <sonar.login>squ_129674b83b43067b732d0f96521054cd9adc2754</sonar.login>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
