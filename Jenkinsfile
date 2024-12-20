@@ -17,7 +17,10 @@ pipeline {
 
         stage('Build and Test') {
             steps {
-                bat 'mvn clean verify -DskipTests=false'
+                bat '''
+                    mvn clean verify -DskipTests=false
+                    mvn dependency:copy-dependencies
+                '''
             }
         }
 
@@ -33,7 +36,7 @@ pipeline {
                             -Dsonar.tests=src/test/java ^
                             -Dsonar.java.binaries=target/classes ^
                             -Dsonar.java.test.binaries=target/test-classes ^
-                            -Dsonar.java.libraries=target/dependency/*.jar ^
+                            -Dsonar.java.libraries=target/dependency/* ^
                             -Dsonar.sourceEncoding=UTF-8 ^
                             -Dsonar.host.url=http://localhost:9000 ^
                             -Dsonar.token=%SONAR_TOKEN% ^
