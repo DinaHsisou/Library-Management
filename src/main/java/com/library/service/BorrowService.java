@@ -38,7 +38,7 @@ public class BorrowService {
         }
     }
 
-    // Constructor with dependency injection
+
     public BorrowService(BorrowDAO borrowDAO, BookDAO bookDAO, StudentDAO studentDAO) {
         this.borrowDAO = borrowDAO;
         this.bookDAO = bookDAO;
