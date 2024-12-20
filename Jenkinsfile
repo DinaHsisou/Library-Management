@@ -18,7 +18,6 @@ pipeline {
             steps {
                 bat """
                     mvn clean verify
-                    mvn jacoco:report
                 """
             }
         }
@@ -30,10 +29,7 @@ pipeline {
                         bat """
                             mvn sonar:sonar ^
                             -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
-                            -Dsonar.host.url=http://localhost:9000 ^
                             -Dsonar.login=%SONAR_TOKEN% ^
-                            -Dsonar.java.binaries=target/classes ^
-                            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                         """
                     }
                 }
