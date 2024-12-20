@@ -1,12 +1,11 @@
 pipeline {
     agent any
-    triggers {
-            githubPush()
-
-        }
     environment {
        SONAR_PROJECT_KEY = 'LibraryManagement'
        SONAR_SCANNER_HOME = tool 'SonarQubeScanner'
+       DB_URL = "jdbc:mysql://localhost:3306/library_db"
+       DB_USER = "root"
+       DB_PASSWORD = "root"
     }
     tools {
         maven 'maven3'

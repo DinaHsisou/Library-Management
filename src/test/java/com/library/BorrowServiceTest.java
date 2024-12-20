@@ -29,14 +29,12 @@ class BorrowServiceTest {
     @BeforeEach
     void setUp() {
         try {
-            // Initialiser la connexion et les DAOs
             connection = DbConnection.getConnection();
             bookDAO = new BookDAO(connection);
             studentDAO = new StudentDAO(connection);
             borrowDAO = new BorrowDAO(connection);
             borrowService = new BorrowService(borrowDAO, bookDAO, studentDAO);
 
-            // Nettoyer d'abord les tables
             connection.createStatement().execute("DELETE FROM borrows");
             connection.createStatement().execute("DELETE FROM books");
             connection.createStatement().execute("DELETE FROM students");
