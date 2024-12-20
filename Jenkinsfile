@@ -35,7 +35,14 @@ pipeline {
                                          withCredentials([string(credentialsId: 'jenkins-sonar', variable: 'SONAR_TOKEN')]) {
 
                                                  withSonarQubeEnv('SonarQube') {
-                                                            sonar-scanner.bat -D"sonar.projectKey=LibraryManagement" -D"sonar.sources=." -D"sonar.host.url=http://localhost:9000" -D"sonar.token=squ_129674b83b43067b732d0f96521054cd9adc2754"
+                                                             bat """
+                                                                sonar-scanner.bat ^
+                                                                -D"sonar.projectKey=LibraryManagement" ^
+                                                                -D"sonar.sources=." ^
+                                                                -D"sonar.host.url=http://localhost:9000" ^
+                                                                -D"sonar.token=squ_129674b83b43067b732d0f96521054cd9adc2754" ^
+                                                                -D"sonar.java.binaries=target/classes"
+                                                            """
                                                  }
                                          }
                                  }
