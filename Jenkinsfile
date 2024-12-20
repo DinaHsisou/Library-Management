@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
        SONAR_PROJECT_KEY = 'LibraryManagement'
+       SONAR_SCANNER_HOME = tool 'SonarQubeScanner'
     }
     tools {
         maven 'maven3'
@@ -14,13 +15,16 @@ pipeline {
             }
         }
 
-        stage('Build and Test') {
-            steps {
-                bat """
-                    mvn clean verify
-                """
-            }
-        }
+       stage('Build') {
+                   steps {
+                       sh 'mvn clean compile'
+                   }
+               }
+               stage('Test') {
+                   steps {
+                       sh 'mvn test'
+                   }
+               }
 
         stage('Quality Analysis') {
             steps {
