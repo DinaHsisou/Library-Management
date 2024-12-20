@@ -35,7 +35,7 @@ pipeline {
                             -D"sonar.sources=." ^
                             -D"sonar.host.url=http://localhost:9000" ^
                             -D"sonar.token=%SONAR_TOKEN%" ^
-                            -D"sonar.java.binaries=target/classes" ^
+                            -D"sonar.java.binaries=**/*.java" ^
                             -D"sonar.java.source=17"
                         """
                     }
